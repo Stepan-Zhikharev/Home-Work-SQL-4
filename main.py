@@ -9,10 +9,18 @@ create_tables(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-def search_author():
-    name_author = input('Введите фамилию искомого автора: ')
-    result = session.query(Book, Shop, Sale, Publisher).join(Book).join(Stock).join(Sale).join(Shop).filter(Publisher.name == name_author)
-    for x in result:
-        print(x.Book, x.Shop, x.Sale)
+def get_shops(id_or_name):
+    request = session.query(Book.title, Shop.name, Sale.price, Sale.date_sale).select_from(Shop).\
+        join(Stock).join(Book).join(Publisher).join(Sale)
+    if id_or_name.isdigit():
+        result = request.filter(Publisher.id == id_or_name)
+    else:
+        result = request.filter(Publisher.name == id_or_name)
+    for book, shop, price, date in result:
+        print(f"{book: <40} | {shop: <10} | {price: <8} | {date.strftime('%d-%m-%Y')}")
 
 session.close()
+
+if __name__ == "__mane__":
+    enter_data = input('Введите имя или id автора: ')
+    get_shops(enter_data)

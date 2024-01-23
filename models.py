@@ -13,16 +13,10 @@ class Book(Base):
     title = sqlalchemy.Column(sqlalchemy.String(60), unique=True)
     id_publisher = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('publisher.id'), nullable=False)
     publisher = relationship(Publisher, backref='books')
-
-    def __str__(self):
-        return f'{self.title} |'
 class Shop(Base):
     __tablename__ = 'shop'
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
     name = sqlalchemy.Column(sqlalchemy.String(40), nullable=False)
-
-    def __str__(self):
-        return f'{self.name} |'
 class Stock(Base):
     __tablename__ = 'stock'
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
@@ -39,9 +33,6 @@ class Sale(Base):
     id_stock = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('stock.id'), nullable=False)
     count = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
     stock = relationship(Stock, backref='sales')
-
-    def __str__(self):
-        return f'{self.price} | {self.date_sale}'
 def create_tables(engine):
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
